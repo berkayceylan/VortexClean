@@ -12,6 +12,8 @@
 <p align="center">
   <a href="https://berkayceylan.github.io/VortexClean/"><strong>Website and live demo</strong></a>
   &nbsp;·&nbsp;
+  <a href="https://github.com/berkayceylan/VortexClean/releases/latest">Download</a>
+  &nbsp;·&nbsp;
   <a href="#build">Build from source</a>
   &nbsp;·&nbsp;
   <a href="https://github.com/berkayceylan/VortexClean/issues">Issues</a>
@@ -54,6 +56,20 @@ Measured on macOS 27.2 (arm64), Apple clang 21. CI runs the tests on macOS 26 as
 Not exercised end to end: administrator removal (it needs a real password), the interface
 on macOS versions before 27, and anything before macOS 26 (the deployment target is 13.0).
 
+## Download
+
+Get the app from the [latest release](https://github.com/berkayceylan/VortexClean/releases/latest).
+It is for Apple silicon. On an Intel Mac, build from source (not tested).
+
+The app is **ad-hoc signed and not notarized**, so macOS blocks it the first time. Open it
+once and close the message, then go to System Settings ▸ Privacy & Security and choose
+**Open Anyway**. To check first that the file was built from this repository by its release
+workflow:
+
+```bash
+gh attestation verify VortexClean-1.0.0-macos-arm64.zip --repo berkayceylan/VortexClean
+```
+
 ## Build
 
 You need the Xcode Command Line Tools (`xcode-select --install`) and CMake 3.24 or later.
@@ -88,8 +104,8 @@ Debug build use `-DCMAKE_BUILD_TYPE=Debug` and another build directory.
 ### Signing and Gatekeeper
 
 The build is **ad-hoc signed and not notarized**. A copy you build yourself opens normally.
-Gatekeeper blocks a copy that was downloaded or sent from another Mac, so build it where
-you want to use it.
+Gatekeeper blocks a copy that was downloaded or sent from another Mac until you allow it
+(see [Download](#download)).
 
 macOS hides some locations, such as other applications' containers, from every application
 without **Full Disk Access**. VortexClean shows a banner when it could not read something,
@@ -219,6 +235,14 @@ Two tools are not part of CTest:
 - The instrumented interface, `build/asan/VortexClean.app/Contents/MacOS/VortexClean
   --launch-check`. Leave `strict_string_checks` off: on macOS 27 that option aborts inside
   CoreGraphics while a toolbar symbol is drawn, with no VortexClean code on the stack.
+
+## Releasing
+
+1. Set the version in `CMakeLists.txt` and add a section for it to `CHANGELOG.md`.
+2. Push a matching tag, such as `v1.0.0`.
+
+`.github/workflows/release.yml` builds and tests that commit, checks the package, attests
+where it was built and publishes the release.
 
 ## Limitations
 

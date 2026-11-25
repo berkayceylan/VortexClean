@@ -1,0 +1,103 @@
+name: Release
+
+# Pushing a tag such as v1.0.0 builds, tests and publishes that version. The tag, the
+# version in CMakeLists.txt and a section in CHANGELOG.md have to agree. A published
+# release is never overwritten: to correct one, publish a new version.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DVORTEX_WARNINGS_AS_ERRORS=ON
+
+      - name: Check that the tag, the project and the changelog agree
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          project="$(sed -n 's/^CMAKE_PROJECT_VERSION:STATIC=//p' build/CMakeCache.txt)"
+          if [ "$project" != "$version" ]; then
+            echo "The tag says $version, CMakeLists.txt says $project." >&2
+            exit 1
+          fi
+          awk -v version="$version" '/^## /{on = ($2 == version); next} on' CHANGELOG.md > notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "CHANGELOG.md has no section for $version." >&2
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Package
+        run: |
+          name="VortexClean-$VERSION-macos-$(lipo -archs build/VortexClean.app/Contents/MacOS/VortexClean)"
+          mkdir dist
+          ditto -c -k --keepParent build/VortexClean.app "dist/$name.zip"
+          (cd dist && shasum -a 256 "$name.zip" > "$name.zip.sha256")
+          echo "NAME=$name" >> "$GITHUB_ENV"
+
+      - name: Verify the package
+        run: |
+          (cd dist && shasum -a 256 -c "$NAME.zip.sha256")
+          ditto -x -k "dist/$NAME.zip" "$RUNNER_TEMP/unpacked"
+          app="$RUNNER_TEMP/unpacked/VortexClean.app"
+          codesign --verify --deep --strict --verbose=2 "$app"
+          test "$("$app/Contents/MacOS/VortexClean" --version)" = "VortexClean $VERSION"
+          if otool -L "$app/Contents/MacOS/VortexClean" | tail -n +2 | awk '{print $1}' \
+              | grep -vE '^(/System/Library/|/usr/lib/)'; then
+            echo "The bundle links something outside the system." >&2
+            exit 1
+          fi
+          build/tests/vortex_make_demo_disk "$RUNNER_TEMP/disk" "$PWD/build/tests/process_child"
+          "$app/Contents/MacOS/VortexClean" --root "$RUNNER_TEMP/disk" \
+            --dry-run "$RUNNER_TEMP/disk/Applications/Tidewater Backup.app" | grep '"would_remove": 13'
+
+      - uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: dist/*.zip
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat >> notes.md <<NOTES
+
+          ## Install
+
+          1. Download \`$NAME.zip\` below, unzip it and move VortexClean to Applications.
+          2. Open it. macOS blocks it, because it is not notarized. Close the message.
+          3. Open **System Settings > Privacy & Security**, find VortexClean under Security and choose **Open Anyway**.
+
+          ## Verify the download
+
+          \`\`\`bash
+          shasum -a 256 -c $NAME.zip.sha256
+          \`\`\`
+
+          \`\`\`bash
+          gh attestation verify $NAME.zip --repo $GITHUB_REPOSITORY
+          \`\`\`
+
+          The second command checks that this file was built from this repository's source by its release workflow. To build it yourself instead, see the [README](https://github.com/$GITHUB_REPOSITORY#build).
+          NOTES
+          gh release create "$GITHUB_REF_NAME" --verify-tag --title "VortexClean $VERSION" \
+            --notes-file notes.md "dist/$NAME.zip" "dist/$NAME.zip.sha256"
