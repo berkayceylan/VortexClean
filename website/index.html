@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>VortexClean, a native macOS uninstaller</title>
+  <meta name="description" content="VortexClean finds what a Mac app left behind, shows the evidence for each match, and leaves shared and protected files alone. C++20 and programmatic AppKit, MIT licensed.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f5f5f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e0e12" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://berkayceylan.github.io/VortexClean/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="VortexClean">
+  <meta property="og:description" content="Uninstall all of it. Touch nothing else. A native macOS uninstaller in C++20 and AppKit.">
+  <meta property="og:url" content="https://berkayceylan.github.io/VortexClean/">
+  <meta property="og:image" content="https://berkayceylan.github.io/VortexClean/assets/standard-dark.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
+  <link rel="apple-touch-icon" href="assets/icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="theme.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar">
+    <div class="wrap bar__row">
+      <a class="brand" href="#top"><img src="assets/icon-180.png" width="30" height="30" alt="">VortexClean</a>
+      <nav class="bar__nav" aria-label="Sections">
+        <a href="#demo">Demo</a>
+        <a href="#engine">Under the hood</a>
+        <a href="#safety">Safety</a>
+        <a href="#build">Build</a>
+      </nav>
+      <div class="bar__end">
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch to dark appearance">
+          <svg class="icon-sun" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="currentColor"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M15.8 4.2l-1.7 1.7M5.9 14.1l-1.7 1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+          <svg class="icon-moon" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M16.6 12.2A7 7 0 0 1 7.8 3.4a7 7 0 1 0 8.8 8.8Z" fill="currentColor"/></svg>
+        </button>
+        <a class="button button--small" href="https://github.com/berkayceylan/VortexClean">GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero__text">
+        <img class="hero__icon" src="assets/icon-512.png" width="96" height="96" alt="">
+        <h1 id="hero-title">Uninstall all of it. Touch nothing else.</h1>
+        <p class="lede">VortexClean finds what a Mac app left behind, shows the evidence for each match, and leaves shared and protected files alone. It is written in C++20 and Objective-C++, with an AppKit interface built by hand.</p>
+        <div class="actions">
+          <a class="button button--primary" href="https://github.com/berkayceylan/VortexClean">
+            <svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M8 .2a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.49c-2.23.48-2.7-.94-2.7-.94-.36-.93-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.67.07-.52.28-.87.5-1.07-1.77-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 8 .2Z"/></svg>
+            View on GitHub
+          </a>
+          <a class="button" href="#build">Build from source</a>
+        </div>
+      </div>
+
+      <aside class="bom" aria-labelledby="bom-title">
+        <h2 id="bom-title">Bill of materials</h2>
+        <ul class="bom__list">
+          <li><span>C++20 standard library</span><b>in</b></li>
+          <li><span>AppKit, Quartz, QuartzCore</span><b>in</b></li>
+          <li><span>CoreFoundation, CoreServices</span><b>in</b></li>
+          <li><span>Security, libproc, fts</span><b>in</b></li>
+          <li class="is-out"><span>Electron, SwiftUI</span><b>none</b></li>
+          <li class="is-out"><span>Third-party libraries</span><b>none</b></li>
+          <li class="is-out"><span>Shell commands*</span><b>none</b></li>
+        </ul>
+        <p>*For scanning, sizing, <code>.bom</code> parsing or deletion. The one Apple tool it starts is <code>launchctl bootout</code>, without a shell.</p>
+      </aside>
+    </section>
+
+    <section class="wrap" aria-label="Screenshots">
+      <div class="stage" id="preview" data-mode="auto" data-app="standard">
+        <figure class="shot">
+          <div class="shot__frame">
+            <picture class="shot__light">
+              <source type="image/avif" srcset="assets/standard-light.avif">
+              <img src="assets/standard-light.png" width="1180" height="740" alt="VortexClean in light mode, listing everything that belongs to PixelForge Studio">
+            </picture>
+            <picture class="shot__dark">
+              <source type="image/avif" srcset="assets/standard-dark.avif">
+              <img src="assets/standard-dark.png" width="1180" height="740" alt="VortexClean in dark mode, listing everything that belongs to PixelForge Studio">
+            </picture>
+            <span class="shot__handle" aria-hidden="true"></span>
+            <input class="shot__range" type="range" min="0" max="100" step="0.5" value="50" aria-label="Position of the divider between light and dark">
+          </div>
+          <figcaption>The real app on a synthetic disk. Every application shown is invented.</figcaption>
+        </figure>
+        <div class="stage__controls">
+          <fieldset class="segmented">
+            <legend class="sr">Screenshot</legend>
+            <label><input type="radio" name="shot-app" value="standard" checked><span>Standard app</span></label>
+            <label><input type="radio" name="shot-app" value="package"><span>Package install</span></label>
+            <label><input type="radio" name="shot-app" value="suite"><span>Suite</span></label>
+          </fieldset>
+          <fieldset class="segmented">
+            <legend class="sr">Appearance</legend>
+            <label><input type="radio" name="shot-mode" value="light"><span>Light</span></label>
+            <label><input type="radio" name="shot-mode" value="dark"><span>Dark</span></label>
+            <label><input type="radio" name="shot-mode" value="split"><span>Split</span></label>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="demo" aria-labelledby="demo-title">
+      <header class="section__head">
+        <h2 id="demo-title">Inspect a cleanup before it happens</h2>
+        <p>Three invented apps, scanned by the real engine on a synthetic disk. Tick items, run a simulated clean, and read the audit log it would write. It runs in this page and can't see your Mac.</p>
+      </header>
+      <div class="stage stage--demo" id="inspector-stage">
+        <div class="window" id="inspector">
+          <noscript><p class="window__noscript">The inspector needs JavaScript. The screenshots above show the same screens.</p></noscript>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="engine" aria-labelledby="engine-title">
+      <header class="section__head">
+        <h2 id="engine-title">Checked path for path against Apple’s own tool</h2>
+        <p>Package installers leave a receipt that lists every file they wrote. The format is undocumented and binary, so VortexClean has its own parser. The numbers here were measured on one Mac, not estimated.</p>
+      </header>
+
+      <div class="proof">
+        <div class="proof__figure">
+          <p class="proof__number">614,347</p>
+          <p class="proof__label">paths read from 139 real receipts. Compared with <code>lsbom</code>, <strong>0 differ</strong>.</p>
+        </div>
+        <div class="proof__hex">
+          <h3>The first 32 bytes of a receipt</h3>
+          <ol class="hex" aria-label="Fields of a BOMStore header">
+            <li class="hex__wide"><code>42 4f 4d 53 74 6f 72 65</code><span>magic, “BOMStore”</span></li>
+            <li><code>00 00 00 01</code><span>version 1</span></li>
+            <li><code>00 00 00 6d</code><span>109 blocks</span></li>
+            <li><code>00 00 49 b9</code><span>block table at 0x49b9</span></li>
+            <li><code>00 00 03 88</code><span>904 bytes long</span></li>
+            <li><code>00 00 49 7d</code><span>variables at 0x497d</span></li>
+            <li><code>00 00 00 3c</code><span>60 bytes long</span></li>
+          </ol>
+          <p>From there the parser follows the variable table to the <code>Paths</code> tree, steps down to the leftmost leaf, and walks the leaf chain. Every offset is bounds-checked, every page is visited once, and a name that could escape the install folder is dropped.</p>
+        </div>
+      </div>
+
+      <h3 class="subhead" id="rules-title">What it refuses to count as evidence</h3>
+      <div class="table-scroll">
+        <table class="rules" aria-labelledby="rules-title">
+          <thead><tr><th scope="col">It looks like a match</th><th scope="col">What happens</th></tr></thead>
+          <tbody>
+            <tr><td><code>~/Library/Caches/com.fernwood.sheets</code> while removing Writer</td><td>Skipped. It belongs to another installed app.</td></tr>
+            <tr><td>An identifier registered to an app somewhere else on the disk</td><td>Skipped, after asking LaunchServices who owns it.</td></tr>
+            <tr><td><code>~/Library/Application Support/Fernwood</code></td><td>Listed unchecked, with the apps that share it.</td></tr>
+            <tr><td>“Backup”, “Helper”, “Desktop”, or any name under four characters</td><td>Too generic to match on.</td></tr>
+            <tr><td><code>com.apple.…</code></td><td>Never matched, unless a verified third-party receipt lists that exact item.</td></tr>
+            <tr><td>A folder with another application inside it</td><td>Never offered as one unit.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subhead">Measured</h3>
+      <dl class="facts">
+        <div><dt>Compiler warnings</dt><dd>0</dd><dd class="facts__note"><code>-Wall -Wextra -Wpedantic</code> in Debug, Release and sanitizer builds</dd></div>
+        <div><dt>Test cases</dt><dd>82</dd><dd class="facts__note">in 7 suites, all passing in all three builds</dd></div>
+        <div><dt>ASan and UBSan reports</dt><dd>0</dd><dd class="facts__note">from the suites and the instrumented interface</dd></div>
+        <div><dt>Leaks</dt><dd>0</dd><dd class="facts__note">in every suite under <code>leaks(1)</code></dd></div>
+        <div><dt>Idle CPU</dt><dd>&lt; 0.1%</dd><dd class="facts__note">0.06 to 0.08 s of CPU over 90 s, window open</dd></div>
+        <div><dt>Third-party dependencies</dt><dd>0</dd><dd class="facts__note"><code>otool -L</code> lists system frameworks and libraries only</dd></div>
+      </dl>
+      <p class="fineprint">macOS 27.2 on arm64, Apple clang 21. Not exercised end to end: administrator removal, which needs a real password, and macOS versions before 27.</p>
+    </section>
+
+    <section class="section wrap" id="safety" aria-labelledby="safety-title">
+      <header class="section__head">
+        <h2 id="safety-title">It stays inside macOS security</h2>
+        <p>An uninstaller is a program that deletes things. These are the limits it keeps.</p>
+      </header>
+      <dl class="safety">
+        <div><dt>System Integrity Protection</dt><dd>Protected locations are never offered, even when a receipt lists them, and the deletion engine checks again right before it acts. An item it has to refuse is recorded as <code>skipped_sip</code>.</dd></div>
+        <div><dt>Full Disk Access</dt><dd>macOS hides some folders from every app. When something could not be read, VortexClean says so, marks sizes as lower bounds, and links to the right Settings pane. It does not work around the restriction.</dd></div>
+        <div><dt>APFS clones</dt><dd>Cloned files share blocks in a way the file system does not report. The space you get back can be smaller than the size shown.</dd></div>
+        <div><dt>Trash by default</dt><dd>Items go to the Trash, where you can put them back. Permanent deletion is a separate mode with its own acknowledgement, and its button stays disabled until you tick it.</dd></div>
+        <div><dt>Dry run and audit log</dt><dd>A dry run validates and measures without touching anything. Every run, dry or not, writes a JSON report of each item, its status and the reason it matched.</dd></div>
+        <div><dt>Symbolic links</dt><dd>Links are removed, never followed. Deletion is anchored to open directory descriptors, so a path swapped halfway through cannot redirect it.</dd></div>
+      </dl>
+    </section>
+
+    <section class="section wrap" id="build" aria-labelledby="build-title">
+      <header class="section__head">
+        <h2 id="build-title">Build it yourself</h2>
+        <p>You need CMake 3.24 or later and the Xcode Command Line Tools, which <code>xcode-select --install</code> sets up. Full Xcode is not required.</p>
+      </header>
+      <ol class="steps">
+        <li>
+          <h3>Get the source</h3>
+          <div class="code"><pre><code>git clone https://github.com/berkayceylan/VortexClean.git
+cd VortexClean</code></pre><button class="copy" type="button">Copy</button></div>
+        </li>
+        <li>
+          <h3>Configure and build</h3>
+          <div class="code"><pre><code>cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release
+cmake --build build/release -j8</code></pre><button class="copy" type="button">Copy</button></div>
+        </li>
+        <li>
+          <h3>Run the tests</h3>
+          <div class="code"><pre><code>ctest --test-dir build/release --output-on-failure</code></pre><button class="copy" type="button">Copy</button></div>
+        </li>
+        <li>
+          <h3>Open the app</h3>
+          <div class="code"><pre><code>open build/release/VortexClean.app</code></pre><button class="copy" type="button">Copy</button></div>
+        </li>
+      </ol>
+      <div class="note">
+        <h3>About signing</h3>
+        <p>The build is ad-hoc signed and not notarized. A copy you build yourself opens normally. Gatekeeper blocks a copy that was downloaded or sent from another Mac, so build it where you want to use it. Because an ad-hoc signature belongs to one exact binary, macOS may ask for Full Disk Access again after a rebuild.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__row">
+      <p class="footer__brand"><img src="assets/icon-180.png" width="22" height="22" alt="">VortexClean</p>
+      <nav aria-label="Project">
+        <a href="https://github.com/berkayceylan/VortexClean">GitHub repository</a>
+        <a href="https://github.com/berkayceylan/VortexClean/issues">Issues</a>
+        <a href="https://github.com/berkayceylan/VortexClean/blob/main/LICENSE">MIT License</a>
+        <a href="https://github.com/berkayceylan/VortexClean#readme">README</a>
+      </nav>
+      <p class="footer__note">This page loads nothing from other sites and sets no cookies. VortexClean is not affiliated with Apple. macOS, AppKit and Xcode are trademarks of Apple Inc.</p>
+    </div>
+  </footer>
+
+  <div class="sr" id="announcer" role="status" aria-live="polite"></div>
+</body>
+</html>
