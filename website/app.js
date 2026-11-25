@@ -62,12 +62,22 @@ for (const input of preview.querySelectorAll('input[name="shot-app"]')) {
     preview.dataset.app = input.value;
     for (const tone of ['light', 'dark']) {
       const picture = preview.querySelector(`.shot__${tone}`);
-      picture.querySelector('source').srcset = `assets/${input.value}-${tone}.avif`;
+      const source = picture.querySelector('source');  // gone if this browser could not decode it
+      if (source) source.srcset = `assets/${input.value}-${tone}.webp`;
       const image = picture.querySelector('img');
       image.src = `assets/${input.value}-${tone}.png`;
       image.alt = `VortexClean in ${tone} mode, listing everything that belongs to ${names[input.value]}`;
     }
   });
+}
+
+// <picture> chooses a file by its type alone. If the browser claims a type but then
+// cannot decode the file, nothing falls back by itself: drop the source, keep the PNG.
+for (const picture of preview.querySelectorAll('picture')) {
+  const image = picture.querySelector('img');
+  const fallBack = () => picture.querySelector('source')?.remove();
+  image.addEventListener('error', fallBack);
+  if (image.complete && image.naturalWidth === 0) fallBack();
 }
 
 range.addEventListener('input', () => {

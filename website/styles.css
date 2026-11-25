@@ -167,6 +167,7 @@ h1 { font-size: clamp(2.5rem, 5.6vw, 4.25rem); line-height: 1.04; letter-spacing
 .section { padding-block: 104px 0; }
 .section__head { max-width: 720px; margin-bottom: 36px; }
 .section__head h2 { font-size: clamp(1.9rem, 3.6vw, 2.75rem); line-height: 1.1; letter-spacing: -0.025em; }
+.section__head code { white-space: nowrap; }
 .section__head p { margin-top: 14px; color: var(--mute); font-size: 1.08rem; }
 .subhead { margin: 64px 0 18px; font-size: 1.3rem; letter-spacing: -0.015em; }
 .fineprint { margin-top: 18px; font-size: 14px; color: var(--mute); }

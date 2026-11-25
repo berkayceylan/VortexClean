@@ -4,9 +4,10 @@
 #
 #   tools/capture_screenshots.sh [build directory]     (default: build/release)
 #
-# Needs a logged-in window server session. Writes PNG files to docs/assets/ and
-# AVIF + PNG files to website/assets/.
+# Needs a logged-in window server session and cwebp (brew install webp). Writes PNG
+# files to docs/assets/ and WebP + PNG files to website/assets/.
 set -euo pipefail
+command -v cwebp >/dev/null || { echo "cwebp is missing: brew install webp" >&2; exit 1; }
 
 cd "$(dirname "$0")/.."
 build="${1:-build/release}"
@@ -29,8 +30,9 @@ capture() { # <output name> <application> [more arguments]
             "$disk/Applications/$application.app" -AppleLocale en_US -AppleLanguages "(en)")"
         grep -q "\"scanned\":\"$application\"" <<<"$summary" || { echo "unexpected: $summary" >&2; exit 1; }
         cp "$file" "docs/assets/$name-$appearance.png"
-        # The website serves AVIF, with a half-size PNG for browsers without it.
-        sips -s format avif -s formatOptions 70 "$file" --out "website/assets/$name-$appearance.avif" >/dev/null
+        # The website serves lossless WebP, with a half-size PNG as the fallback. Not the
+        # AVIF that sips writes: it is a HEIF-style tile grid, which Firefox cannot decode.
+        cwebp -quiet -lossless -m 6 "$file" -o "website/assets/$name-$appearance.webp"
         sips --resampleWidth 1180 "$file" --out "website/assets/$name-$appearance.png" >/dev/null
         echo "captured $name-$appearance"
     done
