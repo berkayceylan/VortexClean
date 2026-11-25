@@ -39,7 +39,7 @@ engine. <code>tools/capture_screenshots.sh</code> re-creates them.</sub>
 
 ## Verified
 
-Measured on macOS 27.2 (arm64), Apple clang 21.
+Measured on macOS 27.2 (arm64), Apple clang 21. CI runs the tests on macOS 26 as well.
 
 | | |
 |---|---|
@@ -51,8 +51,8 @@ Measured on macOS 27.2 (arm64), Apple clang 21.
 | Idle CPU | under 0.1% with the window open (0.06 to 0.08 s over 90 s) |
 | `otool -L` | system frameworks and libraries only |
 
-Not exercised end to end: administrator removal (it needs a real password), and macOS
-versions older than 27 (the deployment target is 13.0).
+Not exercised end to end: administrator removal (it needs a real password), the interface
+on macOS versions before 27, and anything before macOS 26 (the deployment target is 13.0).
 
 ## Build
 

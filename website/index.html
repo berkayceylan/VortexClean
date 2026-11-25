@@ -170,7 +170,7 @@
         <div><dt>Idle CPU</dt><dd>&lt; 0.1%</dd><dd class="facts__note">0.06 to 0.08 s of CPU over 90 s, window open</dd></div>
         <div><dt>Third-party dependencies</dt><dd>0</dd><dd class="facts__note"><code>otool -L</code> lists system frameworks and libraries only</dd></div>
       </dl>
-      <p class="fineprint">macOS 27.2 on arm64, Apple clang 21. Not exercised end to end: administrator removal, which needs a real password, and macOS versions before 27.</p>
+      <p class="fineprint">macOS 27.2 on arm64, Apple clang 21. CI runs the tests on macOS 26 as well. Not exercised end to end: administrator removal, which needs a real password, the interface on macOS versions before 27, and anything before macOS 26.</p>
     </section>
 
     <section class="section wrap" id="safety" aria-labelledby="safety-title">
