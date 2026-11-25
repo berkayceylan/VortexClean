@@ -1,0 +1,22 @@
+# Build products
+build/
+*.o
+*.a
+*.dSYM/
+*.app/
+*.icns
+
+# Temporary fixtures and reports
+/demo-disk/
+*.ips
+audit-*.json
+
+# macOS and editors
+.DS_Store
+.vscode/
+.idea/
+*.xcodeproj/
+xcuserdata/
+compile_commands.json
+.cache/
+.claude/
