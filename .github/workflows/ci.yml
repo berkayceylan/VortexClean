@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: macos-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Release
+            build_type: Release
+            sanitizers: "OFF"
+          - name: Debug
+            build_type: Debug
+            sanitizers: "OFF"
+          - name: ASan and UBSan
+            build_type: Debug
+            sanitizers: "ON"
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Show the toolchain
+        run: |
+          sw_vers
+          clang++ --version
+          cmake --version
+
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DENABLE_SANITIZERS=${{ matrix.sanitizers }}
+          -DVORTEX_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Verify the bundle
+        if: matrix.name == 'Release'
+        run: |
+          codesign --verify --deep --strict --verbose=2 build/VortexClean.app
+          build/VortexClean.app/Contents/MacOS/VortexClean --version
+          otool -L build/VortexClean.app/Contents/MacOS/VortexClean
+          if otool -L build/VortexClean.app/Contents/MacOS/VortexClean | tail -n +2 | awk '{print $1}' \
+              | grep -vE '^(/System/Library/|/usr/lib/)'; then
+            echo "The bundle links something outside the system." >&2
+            exit 1
+          fi
+
+      - name: Scan a synthetic disk
+        if: matrix.name == 'Release'
+        run: |
+          build/tests/vortex_make_demo_disk "$RUNNER_TEMP/disk" "$PWD/build/tests/process_child"
+          build/VortexClean.app/Contents/MacOS/VortexClean --root "$RUNNER_TEMP/disk" \
+            --dry-run "$RUNNER_TEMP/disk/Applications/Tidewater Backup.app" | tee dry-run.json
+          grep -q '"would_remove": 13' dry-run.json

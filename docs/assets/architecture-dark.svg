@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 466" width="1000" height="466" role="img" aria-labelledby="t d" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Helvetica, Arial, sans-serif">
+<title id="t">VortexClean architecture</title><desc id="d">The AppKit interface talks to an Objective-C++ bridge, which drives a pure C++20 engine built on macOS system frameworks.</desc>
+<rect x="1" y="1" width="998" height="72" rx="14" fill="#17171c" stroke="#3a3a46"/>
+<text x="24" y="33" font-size="15" font-weight="600" fill="#f2f2f6">Interface</text>
+<text x="24" y="53" font-size="12" fill="#a0a0ac">src/ui · AppKit, no nibs</text>
+<rect x="232" y="20" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="321.5" y="41.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">Sidebar</text>
+<rect x="421" y="20" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="510.5" y="41.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">Outline and footer</text>
+<rect x="610" y="20" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="699.5" y="41.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">StorageBreakdownView</text>
+<rect x="799" y="20" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="888.5" y="41.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">Toolbar, drag and drop</text>
+<path d="M118 75 v20" stroke="#8d8af0" stroke-width="1.5" fill="none"/><path d="M113.5 90 l4.5 6 l4.5 -6" stroke="#8d8af0" stroke-width="1.5" fill="none"/>
+<text x="136" y="90" font-size="11.5" fill="#a0a0ac">models in, blocks on the main queue out</text>
+<rect x="1" y="101" width="998" height="72" rx="14" fill="#1a1a22" stroke="#3a3a46"/>
+<text x="24" y="133" font-size="15" font-weight="600" fill="#f2f2f6">Bridge</text>
+<text x="24" y="153" font-size="12" fill="#a0a0ac">src/bridge · Objective-C++20</text>
+<rect x="232" y="120" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="321.5" y="141.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">VCEngine</text>
+<rect x="421" y="120" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="510.5" y="141.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">Trash provider</text>
+<rect x="610" y="120" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="699.5" y="141.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">Elevation</text>
+<rect x="799" y="120" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="888.5" y="141.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">Command line</text>
+<path d="M118 175 v20" stroke="#8d8af0" stroke-width="1.5" fill="none"/><path d="M113.5 190 l4.5 6 l4.5 -6" stroke="#8d8af0" stroke-width="1.5" fill="none"/>
+<text x="136" y="190" font-size="11.5" fill="#a0a0ac">values and callbacks, no Objective-C below this line</text>
+<rect x="1" y="201" width="998" height="160" rx="14" fill="#1d1d29" stroke="#3a3a46"/>
+<text x="24" y="233" font-size="15" font-weight="600" fill="#f2f2f6">Engine</text>
+<text x="24" y="253" font-size="12" fill="#a0a0ac">src/core · C++20</text>
+<rect x="232" y="220" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="321.5" y="241.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">BundleInspector</text>
+<rect x="421" y="220" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="510.5" y="241.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">ReceiptStore</text>
+<rect x="610" y="220" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="699.5" y="241.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">BomParser</text>
+<rect x="799" y="220" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="888.5" y="241.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">MatchEngine</text>
+<rect x="232" y="266" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="321.5" y="287.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">RemnantScanner</text>
+<rect x="421" y="266" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="510.5" y="287.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">DiskAnalyzer</text>
+<rect x="610" y="266" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="699.5" y="287.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">ProcessInspector</text>
+<rect x="799" y="266" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="888.5" y="287.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">ThreadPool</text>
+<rect x="232" y="312" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="321.5" y="333.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">PathPolicy</text>
+<rect x="421" y="312" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="510.5" y="333.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">DeletionEngine</text>
+<rect x="610" y="312" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="699.5" y="333.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">AuditLogger</text>
+<rect x="799" y="312" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="888.5" y="333.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">PrivilegedHelper</text>
+<text x="24" y="287" font-size="12" fill="#a0a0ac">finds and explains</text>
+<text x="24" y="333" font-size="12" fill="#a0a0ac">checks and removes</text>
+<path d="M118 363 v20" stroke="#8d8af0" stroke-width="1.5" fill="none"/><path d="M113.5 378 l4.5 6 l4.5 -6" stroke="#8d8af0" stroke-width="1.5" fill="none"/>
+<text x="136" y="378" font-size="11.5" fill="#a0a0ac">system calls</text>
+<rect x="1" y="387" width="998" height="72" rx="14" fill="#17171c" stroke="#3a3a46"/>
+<text x="24" y="419" font-size="15" font-weight="600" fill="#f2f2f6">macOS</text>
+<text x="24" y="439" font-size="12" fill="#a0a0ac">system frameworks only</text>
+<rect x="232" y="406" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="321.5" y="427.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">CoreFoundation</text>
+<rect x="421" y="406" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="510.5" y="427.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">CoreServices</text>
+<rect x="610" y="406" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="699.5" y="427.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">Security</text>
+<rect x="799" y="406" width="179" height="34" rx="8" fill="#23232b" stroke="#3a3a46"/>
+<text x="888.5" y="427.5" text-anchor="middle" font-size="12.5" fill="#f2f2f6">fts, *at(2), libproc</text>
+</svg>
